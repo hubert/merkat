@@ -1,0 +1,13 @@
+.row
+  .span10.offset1
+    %fieldset
+      %legend= @account.username
+      = form_for @account, :class => 'form-horizontal', :method => 'put' do |f|
+        .control-group
+          %label.control-label{:for => "account_balance"} Balance
+          .controls
+            = f.text_field :balance, :placeholder => '$0.00'
+        .control-group
+          .controls
+            %button.btn{:type => "submit"} Save
+  .span1
