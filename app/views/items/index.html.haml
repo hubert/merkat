@@ -1,0 +1,31 @@
+.row
+  .span10.offset1
+    %table.table
+      %thead
+        %th Title
+        %th Price
+        %th Picture
+        %th Actions
+      - @items.each do |i| 
+        %tr
+          %td= i.title
+          %td= i.price
+          %td
+            %img{:src => i.photo_url} 
+          %td 
+            - if current_account.balance > i.price
+              .btn.btn-success Buy
+            .btn.btn-primary.remove-button{'data-url' => item_url(i)} Remove
+    .span1        
+
+:javascript
+  $('.remove-button').click(function(event) {
+    var clickTarget = $(event.target);
+    $.ajax({
+      url: clickTarget.data('url'),
+      type: 'DELETE',
+      data: clickTarget.data()
+    }).done(function() {
+      clickTarget.closest('tr').hide();
+    });
+  });
