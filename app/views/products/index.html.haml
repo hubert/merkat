@@ -1,0 +1,53 @@
+.row
+  .span10.offset1
+    = form_tag products_url, :method => 'get', :class => 'form-horizontal' do 
+      %fieldset
+        %legend Search
+        .control-group
+          %label.checkbox.inline
+            = check_box_tag 'search[targets][]', 'san-francisco', true
+            San Francisco
+          %label.checkbox.inline
+            = check_box_tag 'search[targets][]', 'los-angeles', false
+            Los Angeles
+          %label.checkbox.inline
+            = check_box_tag 'search[targets][]', 'nyc', false
+            NYC
+          %label.checkbox.inline
+            = check_box_tag 'search[targets][]', 'seattle', false
+            Seattle
+        .control-group
+          %div{:margin => '20px'}
+            = text_field_tag 'search[query]', nil, :placeholder => 'find me', :class => 'input-medium search-query'
+            = submit_tag 'Search', :class => 'btn'
+
+    %hr
+
+    %table.table
+      %thead
+        %th Location
+        %th Link
+        %th Title
+        %th Price
+        %th Picture
+        %th Actions
+      - @products.each do |p| 
+        %tr
+          %td= p.location
+          %td
+            %a{:href => p.short_url}
+          %td= p.title
+          %td= p.price
+          %td
+            %img{:src => p.primary_photo_url} 
+          %td 
+            .btn.btn-primary.add-button{'data' => { 'title' => p.title, 'account_id' => current_account_id, 'price' => p.price, 'photo_url' => p.primary_photo_url }} Add to wishlist
+  .span1        
+
+:javascript
+  $('.add-button').click(function(event) {
+    var clickTarget = $(event.target);
+    $.post('/items', clickTarget.data()).done(function() {
+      clickTarget.closest('tr').hide();
+    });
+  });
